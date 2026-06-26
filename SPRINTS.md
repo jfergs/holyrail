@@ -303,10 +303,13 @@ editable exposure correction model.
 - Added `holyrail curves exposure` JSON export.
 - Added tests for gradual sunset preservation and single-frame flicker
   correction.
+- Added `holyrail recompute-curves` to regenerate curves from stored metrics.
+- Added exposure strength, smoothing-window, and max-correction settings.
+- Added tests for strength scaling and correction clamping.
 
 **Current Validation:**
 
-- `uv run pytest` passed with 22 tests.
+- `uv run pytest` passed with 24 tests.
 - `uv run ruff check .` passed.
 - `uv run black --check .` passed.
 

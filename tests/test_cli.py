@@ -23,6 +23,7 @@ def test_cli_analyze_and_preview(tmp_path: Path) -> None:
     exposure_curve = tmp_path / "exposure-curve.json"
 
     assert main(["analyze", str(frames), "--project", str(project)]) == 0
+    assert main(["recompute-curves", "--project", str(project)]) == 0
     assert project.exists()
     assert main(["preview", "--project", str(project), "--output", str(previews)]) == 0
     assert main(["report", "--project", str(project), "--output", str(report)]) == 0

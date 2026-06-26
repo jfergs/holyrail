@@ -20,7 +20,26 @@ def analyze(source: Path, project_path: Path, config: HolyRailConfig) -> Project
     project = ProjectDocument(
         source_root=str(source),
         frames=frames,
-        metrics=build_sequence_metrics(frame_metrics, analysis_report=analysis_report),
+        metrics=build_sequence_metrics(
+            frame_metrics,
+            analysis_report=analysis_report,
+            exposure_strength=config.exposure.strength,
+            max_exposure_correction_ev=config.exposure.max_correction_ev,
+            exposure_smoothing_window=config.exposure.smoothing_window,
+        ),
+    )
+    save_project(project, project_path)
+    return project
+
+
+def recompute_curves(project_path: Path, config: HolyRailConfig) -> ProjectDocument:
+    project = load_project(project_path)
+    project.metrics = build_sequence_metrics(
+        project.metrics.frames,
+        analysis_report=project.metrics.analysis_report,
+        exposure_strength=config.exposure.strength,
+        max_exposure_correction_ev=config.exposure.max_correction_ev,
+        exposure_smoothing_window=config.exposure.smoothing_window,
     )
     save_project(project, project_path)
     return project

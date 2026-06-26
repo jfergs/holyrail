@@ -15,6 +15,7 @@ The phase-one implementation focuses on a non-destructive sequence workflow:
 ```bash
 uv sync --extra dev
 uv run holyrail analyze /path/to/frames --project holyrail-project.json
+uv run holyrail recompute-curves --project holyrail-project.json
 uv run holyrail inspect --project holyrail-project.json
 uv run holyrail report --project holyrail-project.json --output analysis-report.json
 uv run holyrail curves exposure --project holyrail-project.json --output exposure-curve.json

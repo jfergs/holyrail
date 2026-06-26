@@ -24,8 +24,11 @@ HolyRail cards use `HR-XXX`.
     anchors, and samples separately from per-frame corrections.
   - Kept legacy `exposure_curve` samples for compatibility.
   - Added `holyrail curves exposure` JSON export.
+  - Added `holyrail recompute-curves` to regenerate curves from stored metrics.
+  - Added exposure strength, smoothing-window, and max-correction settings.
   - Added tests that gradual sunset trends are preserved and single-frame
     flicker receives a bounded negative exposure correction.
+  - Added tests for strength scaling and correction clamping.
 
 ## P0 - Foundation
 

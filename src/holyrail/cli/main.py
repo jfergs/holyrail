@@ -18,6 +18,12 @@ def _analyze(args: argparse.Namespace) -> int:
     return 0
 
 
+def _recompute_curves(args: argparse.Namespace) -> int:
+    project = workflows.recompute_curves(args.project, _config(args))
+    print(f"Recomputed curves for {len(project.metrics.frames)} frames -> {args.project}")
+    return 0
+
+
 def _preview(args: argparse.Namespace) -> int:
     outputs = workflows.preview(args.project, args.output, _config(args))
     print(f"Wrote {len(outputs)} preview frames -> {args.output}")
@@ -101,6 +107,12 @@ def build_parser() -> argparse.ArgumentParser:
     )
     analyze_parser.add_argument("--project", type=Path, default=Path("holyrail-project.json"))
     analyze_parser.set_defaults(func=_analyze)
+
+    recompute_parser = subparsers.add_parser(
+        "recompute-curves", help="Regenerate curves from stored frame metrics."
+    )
+    recompute_parser.add_argument("--project", type=Path, default=Path("holyrail-project.json"))
+    recompute_parser.set_defaults(func=_recompute_curves)
 
     preview_parser = subparsers.add_parser("preview", help="Generate corrected preview frames.")
     preview_parser.add_argument("--project", type=Path, default=Path("holyrail-project.json"))

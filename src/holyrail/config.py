@@ -13,6 +13,12 @@ class AnalysisConfig(BaseModel):
     shadow_percentile: float = Field(default=1.0, ge=0.0, lt=50.0)
 
 
+class ExposureCurveConfig(BaseModel):
+    strength: float = Field(default=1.0, ge=0.0, le=1.0)
+    max_correction_ev: float = Field(default=1.0, gt=0.0, le=5.0)
+    smoothing_window: int | None = Field(default=None, ge=5)
+
+
 class RenderConfig(BaseModel):
     jpeg_quality: int = Field(default=95, ge=1, le=100)
     preview_width: int = Field(default=1280, ge=128)
@@ -21,6 +27,7 @@ class RenderConfig(BaseModel):
 
 class HolyRailConfig(BaseModel):
     analysis: AnalysisConfig = Field(default_factory=AnalysisConfig)
+    exposure: ExposureCurveConfig = Field(default_factory=ExposureCurveConfig)
     render: RenderConfig = Field(default_factory=RenderConfig)
 
     @classmethod

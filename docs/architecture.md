@@ -100,4 +100,5 @@ model as JSON for graphing, UI work, and external inspection.
 Generated correction curves are stored separately from rendered per-frame
 corrections. The exposure model records algorithm metadata, strength, smoothing
 window, anchors, and generated samples. `holyrail curves exposure` exports this
-model for inspection or future UI editing.
+model for inspection or future UI editing. `holyrail recompute-curves`
+regenerates curves from stored metrics without re-reading source images.
