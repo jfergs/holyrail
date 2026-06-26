@@ -75,3 +75,10 @@ Core workflows must still run with plugins disabled.
 schema version, source root, frame count, metric count, correction count, missing
 frame paths, and duplicate resolved paths. Future UI diagnostics should reuse
 the same project diagnostics layer.
+
+## Frame Identity
+
+Frame discovery records relative paths, file size, modified time, optional
+content hash, image dimensions, and available EXIF capture metadata. When
+capture timestamps exist, they drive sequence ordering; otherwise HolyRail falls
+back to deterministic filename/path ordering.

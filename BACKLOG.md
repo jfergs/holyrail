@@ -12,6 +12,16 @@ platform focused first on professional RAW timelapse workflows.
 - Sprint plan exists in `SPRINTS.md`.
 - Current validation passes: `pytest`, `ruff`, and `black --check`.
 
+## In Progress
+
+- `HR-003` Improve RAW metadata extraction:
+  - Bitmap metadata extraction is implemented for development/test inputs.
+  - Frame dimensions, modified time, EXIF capture time, camera make/model,
+    ISO, aperture, shutter, focal length, orientation, white balance, color
+    profile marker, and optional SHA-256 content hash are supported.
+  - Deterministic capture-time ordering is implemented.
+  - RAW-specific metadata validation still needs real RAW fixtures.
+
 ## Card Convention
 
 HolyRail cards use `HR-XXX`.

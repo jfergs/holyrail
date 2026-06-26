@@ -14,6 +14,8 @@ class ImageFrame(BaseModel):
     path: str
     filename: str
     file_size: int
+    modified_time: datetime | None = None
+    content_hash: str | None = None
     capture_time: datetime | None = None
     camera_make: str | None = None
     camera_model: str | None = None
@@ -21,6 +23,12 @@ class ImageFrame(BaseModel):
     iso: int | None = None
     aperture: float | None = None
     shutter_seconds: float | None = None
+    focal_length: float | None = None
+    width: int | None = None
+    height: int | None = None
+    orientation: int | None = None
+    white_balance: str | None = None
+    color_profile: str | None = None
 
 
 class FrameMetrics(BaseModel):

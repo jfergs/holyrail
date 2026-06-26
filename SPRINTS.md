@@ -178,6 +178,23 @@ development inputs.
   manual validation.
 - Sequence ordering is deterministic and covered by tests.
 
+**Progress:**
+
+- Added explicit Pillow dependency for bitmap metadata extraction.
+- Added frame identity fields: modified time and optional SHA-256 content hash.
+- Added image metadata fields: width, height, focal length, orientation, white
+  balance, and color profile marker.
+- Extracted EXIF capture time, camera make/model, ISO, aperture, shutter, and
+  focal length for bitmap inputs.
+- Added capture-time ordering when EXIF timestamps are available.
+- Added tests for EXIF extraction, hashing, and deterministic ordering.
+
+**Current Validation:**
+
+- `uv run pytest` passed with 9 tests.
+- `uv run ruff check .` passed.
+- `uv run black --check .` passed.
+
 ---
 
 ## Sprint 4 - Sequence Analysis Report
