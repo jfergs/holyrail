@@ -142,7 +142,7 @@ Dependency order matters:
 
 ---
 
-## Sprint 3 - Metadata Extraction And Frame Identity
+## Sprint 3 - Metadata Extraction And Frame Identity COMPLETE
 
 **Backlog:** `HR-003`, `HR-024`
 
@@ -178,7 +178,7 @@ development inputs.
   manual validation.
 - Sequence ordering is deterministic and covered by tests.
 
-**Progress:**
+**Completed:**
 
 - Added explicit Pillow dependency for bitmap metadata extraction.
 - Added frame identity fields: modified time and optional SHA-256 content hash.
@@ -188,10 +188,14 @@ development inputs.
   focal length for bitmap inputs.
 - Added capture-time ordering when EXIF timestamps are available.
 - Added tests for EXIF extraction, hashing, and deterministic ordering.
+- Added optional `rawpy` RAW metadata path for dimensions, camera make/model,
+  and white-balance source marker.
+- Documented RAW fixture validation workflow in `docs/raw-validation.md`.
+- Added `holyrail inspect` counts for capture timestamps and content hashes.
 
-**Current Validation:**
+**Validation:**
 
-- `uv run pytest` passed with 9 tests.
+- `uv run pytest` passed with 12 tests.
 - `uv run ruff check .` passed.
 - `uv run black --check .` passed.
 

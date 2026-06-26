@@ -4,3 +4,4 @@ theme:
 nav:
   - Home: index.md
   - Architecture: architecture.md
+  - RAW Metadata Validation: raw-validation.md

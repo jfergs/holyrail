@@ -45,6 +45,8 @@ def _inspect(args: argparse.Namespace) -> int:
     print(f"Schema version: {diagnostics.schema_version}")
     print(f"Source root: {diagnostics.source_root}")
     print(f"Frames: {diagnostics.frame_count}")
+    print(f"Frames with capture time: {diagnostics.frames_with_capture_time}")
+    print(f"Frames with content hash: {diagnostics.frames_with_content_hash}")
     print(f"Metrics frames: {diagnostics.metrics_frame_count}")
     print(f"Corrections: {diagnostics.correction_count}")
     print(f"Missing frames: {diagnostics.missing_count}")

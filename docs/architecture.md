@@ -82,3 +82,7 @@ Frame discovery records relative paths, file size, modified time, optional
 content hash, image dimensions, and available EXIF capture metadata. When
 capture timestamps exist, they drive sequence ordering; otherwise HolyRail falls
 back to deterministic filename/path ordering.
+
+RAW files use an optional `rawpy` metadata path. LibRaw availability varies by
+camera and format, so RAW fixture findings should be recorded with camera model
+and file format.

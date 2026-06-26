@@ -107,3 +107,5 @@ def test_project_diagnostics_reports_missing_frames(tmp_path: Path) -> None:
 
     assert not diagnostics.ok
     assert diagnostics.missing_frames == ["missing.jpg"]
+    assert diagnostics.frames_with_capture_time == 0
+    assert diagnostics.frames_with_content_hash == 0

@@ -26,5 +26,6 @@ The initial implementation extracts luminance distributions, RGB channel means, 
 ## Project Docs
 
 - [Architecture](architecture.md)
+- [RAW Metadata Validation](raw-validation.md)
 - [Backlog](../BACKLOG.md)
 - [Sprint Plan](../SPRINTS.md)

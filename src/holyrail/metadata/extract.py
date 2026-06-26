@@ -60,7 +60,7 @@ def discover_frames(source_root: Path, *, hash_files: bool = False) -> list[Imag
 def _build_frame(path: Path, source_root: Path, *, hash_files: bool) -> ImageFrame:
     stat = path.stat()
     relative_path = path.resolve().relative_to(source_root)
-    metadata = _extract_bitmap_metadata(path)
+    metadata = _extract_image_metadata(path)
 
     return ImageFrame(
         index=0,
@@ -71,6 +71,14 @@ def _build_frame(path: Path, source_root: Path, *, hash_files: bool) -> ImageFra
         content_hash=_sha256(path) if hash_files else None,
         **metadata,
     )
+
+
+def _extract_image_metadata(path: Path) -> dict[str, Any]:
+    if path.suffix.lower() in BITMAP_EXTENSIONS:
+        return _extract_bitmap_metadata(path)
+    if path.suffix.lower() in RAW_EXTENSIONS:
+        return _extract_raw_metadata(path)
+    return {}
 
 
 def _sequence_sort_key(frame: ImageFrame) -> tuple[int, datetime | str, str]:
@@ -96,6 +104,37 @@ def _extract_bitmap_metadata(path: Path) -> dict[str, Any]:
             return metadata
     except OSError:
         return {}
+
+
+def _extract_raw_metadata(path: Path) -> dict[str, Any]:
+    try:
+        import rawpy
+    except ImportError:
+        return {}
+
+    try:
+        with rawpy.imread(str(path)) as raw:
+            sizes = raw.sizes
+            metadata: dict[str, Any] = {
+                "width": int(sizes.width),
+                "height": int(sizes.height),
+                "camera_make": _clean_string(getattr(raw, "camera_make", None)),
+                "camera_model": _clean_string(getattr(raw, "camera_model", None)),
+                "white_balance": _raw_white_balance_name(raw),
+            }
+            return {key: value for key, value in metadata.items() if value is not None}
+    except Exception:
+        return {}
+
+
+def _raw_white_balance_name(raw: Any) -> str | None:
+    camera_wb = getattr(raw, "camera_whitebalance", None)
+    daylight_wb = getattr(raw, "daylight_whitebalance", None)
+    if camera_wb:
+        return "camera"
+    if daylight_wb:
+        return "daylight"
+    return None
 
 
 def _extract_exif_fields(exif: Image.Exif) -> dict[str, Any]:

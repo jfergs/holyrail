@@ -15,6 +15,8 @@ class ProjectDiagnostics(BaseModel):
     frame_count: int
     metrics_frame_count: int
     correction_count: int
+    frames_with_capture_time: int
+    frames_with_content_hash: int
     missing_frames: list[str] = Field(default_factory=list)
     duplicate_paths: list[str] = Field(default_factory=list)
 
@@ -51,6 +53,8 @@ def inspect_project(
         frame_count=len(project.frames),
         metrics_frame_count=len(project.metrics.frames),
         correction_count=len(project.metrics.corrections),
+        frames_with_capture_time=sum(1 for frame in project.frames if frame.capture_time),
+        frames_with_content_hash=sum(1 for frame in project.frames if frame.content_hash),
         missing_frames=missing_frames,
         duplicate_paths=duplicate_paths,
     )
