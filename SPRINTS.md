@@ -38,7 +38,7 @@ Dependency order matters:
 
 ---
 
-## Sprint 1 - Publish And Project Hygiene
+## Sprint 1 - Publish And Project Hygiene COMPLETE
 
 **Backlog:** `HR-001`, `HR-023`
 
@@ -72,6 +72,23 @@ Dependency order matters:
 - Fresh clone can run `uv sync --extra dev` and `uv run pytest`.
 - GitHub Actions pass on `main`.
 - README points users to backlog, sprint plan, and docs.
+
+**Completed:**
+
+- Created public repository: `https://github.com/jfergs/holyrail`.
+- Pushed initial `main` branch.
+- Added repository topics for computational photography, RAW processing,
+  timelapse, Python, OpenCV, and FFmpeg.
+- Added contribution guide, code of conduct, issue templates, PR template, CI,
+  and architecture docs.
+- Validated a fresh clone in `/private/tmp/holyrail-fresh-check`.
+
+**Validation:**
+
+- `uv sync --extra dev` from fresh clone completed.
+- `uv run pytest` passed from fresh clone.
+- `uv run ruff check .` passed from fresh clone.
+- `uv run black --check .` passed from fresh clone.
 
 ---
 

@@ -8,7 +8,7 @@ platform focused first on professional RAW timelapse workflows.
 - Local repository scaffolded at `/Users/fergs/dev/holyrail`.
 - Python package, `uv` project, CLI, JSON project model, metrics analysis,
   preview/render pipeline, plugin registry stub, and docs skeleton exist.
-- No GitHub remote exists yet.
+- GitHub remote exists at `https://github.com/jfergs/holyrail`.
 - Sprint plan exists in `SPRINTS.md`.
 - Initial validation passes: `pytest`, `ruff`, and `black --check`.
 
@@ -110,6 +110,12 @@ HolyRail cards use `HR-XXX`.
   - Add fixture generation scripts.
 
 ## Completed
+
+- `HR-001` Publish initial repository:
+  - Created public GitHub repository.
+  - Pushed `main`.
+  - Added repository metadata and topics.
+  - Confirmed fresh clone install and validation.
 
 - Initial local scaffold:
   - Build system and dependencies.
