@@ -25,6 +25,7 @@ def _smooth(values: list[float], window: int | None = None) -> list[float]:
 
 def build_exposure_model(
     frames: list[FrameMetrics],
+    analysis_report: SequenceAnalysisReport | None = None,
     *,
     strength: float = 1.0,
     max_correction_ev: float = 1.0,
@@ -32,7 +33,7 @@ def build_exposure_model(
 ) -> GeneratedCurve:
     luminance_ev = [math.log2(max(frame.median_luminance, 1e-6)) for frame in frames]
     window = _validate_smoothing_window(smoothing_window, len(frames))
-    smoothed = _smooth(luminance_ev, window=window)
+    smoothed = _smooth_segmented(luminance_ev, frames, analysis_report, window)
     samples = [
         _clamp(float((target - observed) * strength), -max_correction_ev, max_correction_ev)
         for observed, target in zip(luminance_ev, smoothed, strict=True)
@@ -42,12 +43,40 @@ def build_exposure_model(
     ]
     return GeneratedCurve(
         kind="exposure",
-        algorithm="savgol-log-luminance-v1",
+        algorithm="segmented-savgol-log-luminance-v1",
         strength=strength,
         smoothing_window=window,
         anchors=anchors,
         samples=samples,
     )
+
+
+def _smooth_segmented(
+    values: list[float],
+    frames: list[FrameMetrics],
+    analysis_report: SequenceAnalysisReport | None,
+    window: int | None,
+) -> list[float]:
+    if analysis_report is None:
+        return _smooth(values, window=window)
+
+    flicker_indices = set(analysis_report.aperture_flicker_candidate_frames)
+    protected_indices = {
+        index
+        for index in analysis_report.exposure_jump_frames
+        if index not in flicker_indices and index - 1 not in flicker_indices
+    } | set(analysis_report.discontinuity_frames)
+    if not protected_indices:
+        return _smooth(values, window=window)
+
+    smoothed = values.copy()
+    start = 0
+    for position, frame in enumerate(frames):
+        if position > start and frame.index in protected_indices:
+            smoothed[start:position] = _smooth(values[start:position], window=window)
+            start = position
+    smoothed[start:] = _smooth(values[start:], window=window)
+    return smoothed
 
 
 def _smoothing_window(value_count: int) -> int | None:
@@ -82,6 +111,7 @@ def build_sequence_metrics(
 ) -> SequenceMetrics:
     exposure_model = build_exposure_model(
         frames,
+        analysis_report,
         strength=exposure_strength,
         max_correction_ev=max_exposure_correction_ev,
         smoothing_window=exposure_smoothing_window,

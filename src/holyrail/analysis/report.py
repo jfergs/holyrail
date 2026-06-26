@@ -14,6 +14,7 @@ from holyrail.models import (
 EXPOSURE_JUMP_EV_THRESHOLD = 0.5
 WHITE_BALANCE_JUMP_THRESHOLD = 0.18
 APERTURE_FLICKER_EV_THRESHOLD = 0.22
+APERTURE_FLICKER_NEIGHBOR_EV_THRESHOLD = 0.15
 DISCONTINUITY_MIN_SECONDS = 60.0
 
 
@@ -83,6 +84,9 @@ def _detect_aperture_flicker(metrics: list[FrameMetrics]) -> list[int]:
     luminance_ev = [math.log2(max(frame.median_luminance, 1e-6)) for frame in metrics]
     flicker_frames: list[int] = []
     for index in range(2, len(metrics) - 2):
+        neighbor_delta = abs(luminance_ev[index - 1] - luminance_ev[index + 1])
+        if neighbor_delta > APERTURE_FLICKER_NEIGHBOR_EV_THRESHOLD:
+            continue
         local_window = luminance_ev[index - 2 : index] + luminance_ev[index + 1 : index + 3]
         local_expected = median(local_window)
         residual = luminance_ev[index] - local_expected

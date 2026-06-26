@@ -260,7 +260,7 @@ evolution from camera-induced variation.
 
 ---
 
-## Sprint 5 - Exposure Curve Model
+## Sprint 5 - Exposure Curve Model COMPLETE
 
 **Backlog:** `HR-010`, `HR-005`
 
@@ -294,7 +294,7 @@ editable exposure correction model.
 - Exposure correction does not flatten sunset/sunrise fixtures.
 - User-facing project data can explain the generated exposure curve.
 
-**Progress:**
+**Completed:**
 
 - Added schema v4 generated exposure model.
 - Stored algorithm metadata, strength, smoothing window, anchors, and generated
@@ -306,10 +306,16 @@ editable exposure correction model.
 - Added `holyrail recompute-curves` to regenerate curves from stored metrics.
 - Added exposure strength, smoothing-window, and max-correction settings.
 - Added tests for strength scaling and correction clamping.
+- Added segment-aware smoothing so exposure/discontinuity jumps do not get
+  normalized away.
+- Tightened aperture-flicker detection to distinguish single-frame flicker from
+  ramp-adjacent exposure changes.
+- Added tests proving holy-grail exposure steps are preserved while flicker
+  still receives correction.
 
-**Current Validation:**
+**Validation:**
 
-- `uv run pytest` passed with 24 tests.
+- `uv run pytest` passed with 26 tests.
 - `uv run ruff check .` passed.
 - `uv run black --check .` passed.
 

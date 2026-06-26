@@ -16,20 +16,6 @@ platform focused first on professional RAW timelapse workflows.
 
 HolyRail cards use `HR-XXX`.
 
-## In Progress
-
-- `HR-010` Implement non-destructive exposure correction curves:
-  - Added schema v4 generated exposure model.
-  - Stored exposure curve algorithm metadata, strength, smoothing window,
-    anchors, and samples separately from per-frame corrections.
-  - Kept legacy `exposure_curve` samples for compatibility.
-  - Added `holyrail curves exposure` JSON export.
-  - Added `holyrail recompute-curves` to regenerate curves from stored metrics.
-  - Added exposure strength, smoothing-window, and max-correction settings.
-  - Added tests that gradual sunset trends are preserved and single-frame
-    flicker receives a bounded negative exposure correction.
-  - Added tests for strength scaling and correction clamping.
-
 ## P0 - Foundation
 
 - `HR-001` Publish initial repository.
@@ -118,6 +104,21 @@ HolyRail cards use `HR-XXX`.
   - Add fixture generation scripts.
 
 ## Completed
+
+- `HR-010` Implement non-destructive exposure correction curves:
+  - Added schema v4 generated exposure model.
+  - Stored exposure curve algorithm metadata, strength, smoothing window,
+    anchors, and samples separately from per-frame corrections.
+  - Kept legacy `exposure_curve` samples for compatibility.
+  - Added `holyrail curves exposure` JSON export.
+  - Added `holyrail recompute-curves` to regenerate curves from stored metrics.
+  - Added exposure strength, smoothing-window, and max-correction settings.
+  - Added segment-aware smoothing so exposure/discontinuity jumps do not get
+    normalized away.
+  - Tightened aperture-flicker detection to distinguish single-frame flicker
+    from ramp-adjacent exposure changes.
+  - Added tests for gradual trend preservation, holy-grail step preservation,
+    flicker correction, strength scaling, and correction clamping.
 
 - `HR-004` Build a real sequence analysis report:
   - Added schema v3 analysis report model.
