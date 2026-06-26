@@ -45,7 +45,7 @@ def render_frames(
     corrections = {correction.index: correction for correction in project.metrics.corrections}
     output_paths: list[Path] = []
     for frame in project.frames:
-        rgb = load_rgb_image(Path(frame.path))
+        rgb = load_rgb_image(project.resolve_frame_path(frame))
         if preview:
             rgb = resize_for_analysis(rgb, config.render.preview_width)
         rgb = _apply_exposure(rgb, corrections.get(frame.index))

@@ -39,14 +39,16 @@ def discover_frames(source_root: Path) -> list[ImageFrame]:
     if not source_root.exists():
         raise FileNotFoundError(f"Image source does not exist: {source_root}")
 
+    source_root = source_root.resolve()
     paths = sorted(path for path in source_root.rglob("*") if supported_image_path(path))
     frames: list[ImageFrame] = []
     for index, path in enumerate(paths):
         stat = path.stat()
+        relative_path = path.resolve().relative_to(source_root)
         frames.append(
             ImageFrame(
                 index=index,
-                path=str(path),
+                path=relative_path.as_posix(),
                 filename=path.name,
                 file_size=stat.st_size,
             )

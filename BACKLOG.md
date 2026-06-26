@@ -10,7 +10,7 @@ platform focused first on professional RAW timelapse workflows.
   preview/render pipeline, plugin registry stub, and docs skeleton exist.
 - GitHub remote exists at `https://github.com/jfergs/holyrail`.
 - Sprint plan exists in `SPRINTS.md`.
-- Initial validation passes: `pytest`, `ruff`, and `black --check`.
+- Current validation passes: `pytest`, `ruff`, and `black --check`.
 
 ## Card Convention
 
@@ -110,6 +110,14 @@ HolyRail cards use `HR-XXX`.
   - Add fixture generation scripts.
 
 ## Completed
+
+- `HR-002` Harden project file schema:
+  - Added schema v2 with created/saved app-version fields.
+  - Added v1 project migration.
+  - Stored discovered frame paths relative to `source_root`.
+  - Added source-root-aware frame path resolution.
+  - Added read-only project diagnostics and `holyrail inspect`.
+  - Added missing-frame and migration tests.
 
 - `HR-001` Publish initial repository:
   - Created public GitHub repository.

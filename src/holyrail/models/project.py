@@ -5,6 +5,9 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 
+CURRENT_SCHEMA_VERSION = 2
+CURRENT_APP_VERSION = "0.1.0"
+
 
 class ImageFrame(BaseModel):
     index: int
@@ -49,8 +52,9 @@ class SequenceMetrics(BaseModel):
 
 
 class ProjectDocument(BaseModel):
-    schema_version: int = 1
-    app_version: str = "0.1.0"
+    schema_version: int = CURRENT_SCHEMA_VERSION
+    created_with_app_version: str = CURRENT_APP_VERSION
+    last_saved_with_app_version: str = CURRENT_APP_VERSION
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     source_root: str
     frames: list[ImageFrame] = Field(default_factory=list)
@@ -59,3 +63,9 @@ class ProjectDocument(BaseModel):
     @property
     def source_path(self) -> Path:
         return Path(self.source_root)
+
+    def resolve_frame_path(self, frame: ImageFrame) -> Path:
+        path = Path(frame.path)
+        if path.is_absolute():
+            return path
+        return self.source_path / path

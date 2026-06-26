@@ -92,7 +92,7 @@ Dependency order matters:
 
 ---
 
-## Sprint 2 - Project Schema And Portable State
+## Sprint 2 - Project Schema And Portable State COMPLETE
 
 **Backlog:** `HR-002`
 
@@ -124,6 +124,21 @@ Dependency order matters:
 - Project files can move with their source directory and still load.
 - Missing frames produce actionable diagnostics, not tracebacks.
 - `holyrail inspect` works against valid and intentionally damaged projects.
+
+**Completed:**
+
+- Added schema v2 and explicit v1-to-v2 migration.
+- Split created-with and last-saved app version metadata.
+- Stored discovered frame paths relative to `source_root`.
+- Added shared frame path resolution for analysis, preview, and render.
+- Added read-only `holyrail inspect`.
+- Added project diagnostics for missing frames and duplicate resolved paths.
+
+**Validation:**
+
+- `uv run pytest` passed with 7 tests.
+- `uv run ruff check .` passed.
+- `uv run black --check .` passed.
 
 ---
 

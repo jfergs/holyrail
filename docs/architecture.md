@@ -47,6 +47,8 @@ flowchart LR
 HolyRail project JSON should be treated as an editable processing plan. It can
 contain generated analysis and correction data, but it must not require source
 images to move or change. Future schema changes should use explicit migrations.
+Frame paths are stored relative to the source root when possible so a project
+directory can move with its images.
 
 ## Algorithm Boundary
 
@@ -66,3 +68,10 @@ Plugins should extend specific surfaces:
 - UI panels
 
 Core workflows must still run with plugins disabled.
+
+## Project Inspection
+
+`holyrail inspect` is a read-only health check for project files. It reports the
+schema version, source root, frame count, metric count, correction count, missing
+frame paths, and duplicate resolved paths. Future UI diagnostics should reuse
+the same project diagnostics layer.

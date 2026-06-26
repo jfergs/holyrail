@@ -16,8 +16,17 @@ def _to_float01(image: np.ndarray) -> np.ndarray:
     return np.clip(image.astype(np.float32), 0.0, 1.0)
 
 
-def analyze_frame(frame: ImageFrame, config: AnalysisConfig) -> FrameMetrics:
-    image = load_rgb_image(Path(frame.path))
+def _resolve_frame_path(frame: ImageFrame, source_root: Path | None) -> Path:
+    path = Path(frame.path)
+    if path.is_absolute() or source_root is None:
+        return path
+    return source_root / path
+
+
+def analyze_frame(
+    frame: ImageFrame, config: AnalysisConfig, source_root: Path | None = None
+) -> FrameMetrics:
+    image = load_rgb_image(_resolve_frame_path(frame, source_root))
     image = resize_for_analysis(image, config.downsample_width)
     rgb = _to_float01(image)
     luminance = 0.2126 * rgb[..., 0] + 0.7152 * rgb[..., 1] + 0.0722 * rgb[..., 2]
@@ -40,5 +49,7 @@ def analyze_frame(frame: ImageFrame, config: AnalysisConfig) -> FrameMetrics:
     )
 
 
-def analyze_sequence(frames: list[ImageFrame], config: AnalysisConfig) -> list[FrameMetrics]:
-    return [analyze_frame(frame, config) for frame in frames]
+def analyze_sequence(
+    frames: list[ImageFrame], config: AnalysisConfig, source_root: Path | None = None
+) -> list[FrameMetrics]:
+    return [analyze_frame(frame, config, source_root) for frame in frames]

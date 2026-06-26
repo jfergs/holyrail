@@ -13,8 +13,9 @@ from holyrail.rendering import render_frames, render_previews
 
 
 def analyze(source: Path, project_path: Path, config: HolyRailConfig) -> ProjectDocument:
+    source = source.resolve()
     frames = discover_frames(source)
-    frame_metrics = analyze_sequence(frames, config.analysis)
+    frame_metrics = analyze_sequence(frames, config.analysis, source_root=source)
     project = ProjectDocument(
         source_root=str(source),
         frames=frames,
