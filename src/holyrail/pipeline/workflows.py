@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from holyrail.analysis import analyze_sequence
+from holyrail.analysis import analyze_sequence, build_analysis_report
 from holyrail.config import HolyRailConfig
 from holyrail.curves import build_sequence_metrics
 from holyrail.export import assemble_video
@@ -16,10 +16,11 @@ def analyze(source: Path, project_path: Path, config: HolyRailConfig) -> Project
     source = source.resolve()
     frames = discover_frames(source)
     frame_metrics = analyze_sequence(frames, config.analysis, source_root=source)
+    analysis_report = build_analysis_report(frames, frame_metrics)
     project = ProjectDocument(
         source_root=str(source),
         frames=frames,
-        metrics=build_sequence_metrics(frame_metrics),
+        metrics=build_sequence_metrics(frame_metrics, analysis_report=analysis_report),
     )
     save_project(project, project_path)
     return project

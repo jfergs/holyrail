@@ -86,3 +86,11 @@ back to deterministic filename/path ordering.
 RAW files use an optional `rawpy` metadata path. LibRaw availability varies by
 camera and format, so RAW fixture findings should be recorded with camera model
 and file format.
+
+## Analysis Report
+
+Analysis persists a sequence report into the project file. The report records
+summary luminance and white-balance ranges, capture interval statistics,
+detected exposure jumps, white-balance jumps, aperture-flicker candidates,
+capture discontinuities, and per-frame flags. `holyrail report` exports that
+model as JSON for graphing, UI work, and external inspection.

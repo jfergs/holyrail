@@ -62,6 +62,18 @@ def _inspect(args: argparse.Namespace) -> int:
     return 0 if diagnostics.ok else 1
 
 
+def _report(args: argparse.Namespace) -> int:
+    project = load_project(args.project)
+    report_json = project.metrics.analysis_report.model_dump_json(indent=2)
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(report_json, encoding="utf-8")
+        print(f"Wrote analysis report -> {args.output}")
+    else:
+        print(report_json)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="holyrail")
     parser.add_argument("--config", type=Path, help="Optional TOML configuration file.")
@@ -89,6 +101,11 @@ def build_parser() -> argparse.ArgumentParser:
     inspect_parser = subparsers.add_parser("inspect", help="Inspect project health.")
     inspect_parser.add_argument("--project", type=Path, default=Path("holyrail-project.json"))
     inspect_parser.set_defaults(func=_inspect)
+
+    report_parser = subparsers.add_parser("report", help="Export the sequence analysis report.")
+    report_parser.add_argument("--project", type=Path, default=Path("holyrail-project.json"))
+    report_parser.add_argument("--output", type=Path, help="Optional JSON output path.")
+    report_parser.set_defaults(func=_report)
 
     return parser
 

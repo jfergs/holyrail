@@ -5,7 +5,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 
-CURRENT_SCHEMA_VERSION = 2
+CURRENT_SCHEMA_VERSION = 3
 CURRENT_APP_VERSION = "0.1.0"
 
 
@@ -52,11 +52,34 @@ class CorrectionFrame(BaseModel):
     tint_shift: float = 0.0
 
 
+class FrameAnalysisFlags(BaseModel):
+    index: int
+    flags: list[str] = Field(default_factory=list)
+
+
+class SequenceAnalysisReport(BaseModel):
+    frame_count: int = 0
+    median_luminance_min: float | None = None
+    median_luminance_max: float | None = None
+    median_luminance_mean: float | None = None
+    white_balance_r_over_g_min: float | None = None
+    white_balance_r_over_g_max: float | None = None
+    white_balance_b_over_g_min: float | None = None
+    white_balance_b_over_g_max: float | None = None
+    capture_interval_seconds_median: float | None = None
+    exposure_jump_frames: list[int] = Field(default_factory=list)
+    white_balance_jump_frames: list[int] = Field(default_factory=list)
+    aperture_flicker_candidate_frames: list[int] = Field(default_factory=list)
+    discontinuity_frames: list[int] = Field(default_factory=list)
+    frame_flags: list[FrameAnalysisFlags] = Field(default_factory=list)
+
+
 class SequenceMetrics(BaseModel):
     frames: list[FrameMetrics] = Field(default_factory=list)
     exposure_curve: list[float] = Field(default_factory=list)
     color_curve: list[tuple[float, float]] = Field(default_factory=list)
     corrections: list[CorrectionFrame] = Field(default_factory=list)
+    analysis_report: SequenceAnalysisReport = Field(default_factory=SequenceAnalysisReport)
 
 
 class ProjectDocument(BaseModel):

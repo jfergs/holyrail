@@ -236,6 +236,23 @@ evolution from camera-induced variation.
 - Synthetic sequences prove long-term trends are preserved.
 - Tests cover the main phase-one sequence types.
 
+**Progress:**
+
+- Added schema v3 with a persisted analysis report.
+- Added summary statistics for luminance, white-balance ratios, and capture
+  intervals.
+- Added exposure jump, white-balance jump, aperture-flicker candidate, and
+  capture-discontinuity detection.
+- Added per-frame analysis flags.
+- Added `holyrail report` JSON export.
+- Added synthetic tests for exposure/WB jumps and capture discontinuities.
+
+**Current Validation:**
+
+- `uv run pytest` passed with 14 tests.
+- `uv run ruff check .` passed.
+- `uv run black --check .` passed.
+
 ---
 
 ## Sprint 5 - Exposure Curve Model

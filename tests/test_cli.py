@@ -19,12 +19,15 @@ def test_cli_analyze_and_preview(tmp_path: Path) -> None:
     _write_frame(frames / "0002.jpg", 64)
     project = tmp_path / "project.json"
     previews = tmp_path / "previews"
+    report = tmp_path / "report.json"
 
     assert main(["analyze", str(frames), "--project", str(project)]) == 0
     assert project.exists()
     assert main(["preview", "--project", str(project), "--output", str(previews)]) == 0
+    assert main(["report", "--project", str(project), "--output", str(report)]) == 0
 
     assert len(list(previews.glob("*.jpg"))) == 2
+    assert report.exists()
 
 
 def test_cli_inspect_reports_project_health(tmp_path: Path) -> None:
