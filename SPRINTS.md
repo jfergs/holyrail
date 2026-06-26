@@ -201,7 +201,7 @@ development inputs.
 
 ---
 
-## Sprint 4 - Sequence Analysis Report
+## Sprint 4 - Sequence Analysis Report COMPLETE
 
 **Backlog:** `HR-004`, `HR-005`
 
@@ -236,7 +236,7 @@ evolution from camera-induced variation.
 - Synthetic sequences prove long-term trends are preserved.
 - Tests cover the main phase-one sequence types.
 
-**Progress:**
+**Completed:**
 
 - Added schema v3 with a persisted analysis report.
 - Added summary statistics for luminance, white-balance ratios, and capture
@@ -246,10 +246,15 @@ evolution from camera-induced variation.
 - Added per-frame analysis flags.
 - Added `holyrail report` JSON export.
 - Added synthetic tests for exposure/WB jumps and capture discontinuities.
+- Added reusable synthetic sequence fixtures.
+- Added regression tests proving gradual sunset/sunrise trends are not flagged
+  as exposure jumps.
+- Added regression tests for holy-grail exposure steps, aperture flicker, AWB
+  jumps, and multi-day gaps.
 
-**Current Validation:**
+**Validation:**
 
-- `uv run pytest` passed with 14 tests.
+- `uv run pytest` passed with 20 tests.
 - `uv run ruff check .` passed.
 - `uv run black --check .` passed.
 

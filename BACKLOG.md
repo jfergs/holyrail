@@ -16,18 +16,6 @@ platform focused first on professional RAW timelapse workflows.
 
 HolyRail cards use `HR-XXX`.
 
-## In Progress
-
-- `HR-004` Build a real sequence analysis report:
-  - Added schema v3 analysis report model.
-  - Added sequence summary statistics for luminance, white-balance ratios, and
-    capture intervals.
-  - Added exposure jump, white-balance jump, aperture-flicker candidate, and
-    capture-discontinuity detection.
-  - Added per-frame analysis flags.
-  - Added `holyrail report` JSON export.
-  - Synthetic regression tests cover jump and discontinuity detection.
-
 ## P0 - Foundation
 
 - `HR-001` Publish initial repository.
@@ -116,6 +104,17 @@ HolyRail cards use `HR-XXX`.
   - Add fixture generation scripts.
 
 ## Completed
+
+- `HR-004` Build a real sequence analysis report:
+  - Added schema v3 analysis report model.
+  - Added sequence summary statistics for luminance, white-balance ratios, and
+    capture intervals.
+  - Added exposure jump, white-balance jump, aperture-flicker candidate, and
+    capture-discontinuity detection.
+  - Added per-frame analysis flags.
+  - Added `holyrail report` JSON export.
+  - Added synthetic fixtures/tests for sunset, sunrise, holy-grail exposure
+    steps, aperture flicker, AWB jumps, and multi-day gaps.
 
 - `HR-003` Improve RAW metadata extraction:
   - Bitmap metadata extraction is implemented for development/test inputs.

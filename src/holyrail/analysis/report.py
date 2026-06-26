@@ -82,8 +82,9 @@ def _detect_aperture_flicker(metrics: list[FrameMetrics]) -> list[int]:
 
     luminance_ev = [math.log2(max(frame.median_luminance, 1e-6)) for frame in metrics]
     flicker_frames: list[int] = []
-    for index in range(1, len(metrics) - 1):
-        local_expected = (luminance_ev[index - 1] + luminance_ev[index + 1]) / 2
+    for index in range(2, len(metrics) - 2):
+        local_window = luminance_ev[index - 2 : index] + luminance_ev[index + 1 : index + 3]
+        local_expected = median(local_window)
         residual = luminance_ev[index] - local_expected
         if abs(residual) >= APERTURE_FLICKER_EV_THRESHOLD:
             flicker_frames.append(metrics[index].index)

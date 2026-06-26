@@ -2,6 +2,15 @@ from datetime import UTC, datetime, timedelta
 
 from holyrail.analysis.report import build_analysis_report
 from holyrail.models import FrameMetrics, ImageFrame
+from tests.synthetic_sequences import (
+    aperture_flicker_luminance,
+    awb_jump_red_values,
+    frames,
+    holy_grail_luminance,
+    metrics,
+    sunrise_luminance,
+    sunset_luminance,
+)
 
 
 def _frame(index: int, capture_time: datetime | None = None) -> ImageFrame:
@@ -61,3 +70,60 @@ def test_analysis_report_detects_capture_discontinuities() -> None:
 
     assert report.capture_interval_seconds_median == 10.0
     assert report.discontinuity_frames == [3]
+
+
+def test_analysis_report_preserves_gradual_sunset_trend() -> None:
+    report = build_analysis_report(frames(12), metrics(sunset_luminance(12)))
+
+    assert report.exposure_jump_frames == []
+    assert report.aperture_flicker_candidate_frames == []
+    assert report.median_luminance_max > report.median_luminance_min
+
+
+def test_analysis_report_preserves_gradual_sunrise_trend() -> None:
+    report = build_analysis_report(frames(12), metrics(sunrise_luminance(12)))
+
+    assert report.exposure_jump_frames == []
+    assert report.aperture_flicker_candidate_frames == []
+    assert report.median_luminance_max > report.median_luminance_min
+
+
+def test_analysis_report_flags_holy_grail_exposure_step() -> None:
+    report = build_analysis_report(frames(6), metrics(holy_grail_luminance()))
+
+    assert report.exposure_jump_frames == [3]
+
+
+def test_analysis_report_flags_single_aperture_flicker_candidate() -> None:
+    report = build_analysis_report(frames(7), metrics(aperture_flicker_luminance()))
+
+    assert report.aperture_flicker_candidate_frames == [3]
+
+
+def test_analysis_report_flags_awb_jump_without_exposure_jump() -> None:
+    red_values = awb_jump_red_values(8)
+    report = build_analysis_report(
+        frames(8),
+        metrics([0.25] * 8, red_values=red_values),
+    )
+
+    assert report.white_balance_jump_frames == [4]
+    assert report.exposure_jump_frames == []
+
+
+def test_analysis_report_flags_multiday_sequence_gap() -> None:
+    start = datetime(2026, 6, 26, 12, 0, tzinfo=UTC)
+    sequence_frames = frames(4, start=start, step_seconds=10)
+    sequence_frames.append(
+        ImageFrame(
+            index=4,
+            path="0004.jpg",
+            filename="0004.jpg",
+            file_size=1,
+            capture_time=start + timedelta(days=1),
+        )
+    )
+
+    report = build_analysis_report(sequence_frames, metrics([0.2] * 5))
+
+    assert report.discontinuity_frames == [4]
