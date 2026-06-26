@@ -16,6 +16,17 @@ platform focused first on professional RAW timelapse workflows.
 
 HolyRail cards use `HR-XXX`.
 
+## In Progress
+
+- `HR-010` Implement non-destructive exposure correction curves:
+  - Added schema v4 generated exposure model.
+  - Stored exposure curve algorithm metadata, strength, smoothing window,
+    anchors, and samples separately from per-frame corrections.
+  - Kept legacy `exposure_curve` samples for compatibility.
+  - Added `holyrail curves exposure` JSON export.
+  - Added tests that gradual sunset trends are preserved and single-frame
+    flicker receives a bounded negative exposure correction.
+
 ## P0 - Foundation
 
 - `HR-001` Publish initial repository.

@@ -74,6 +74,22 @@ def _report(args: argparse.Namespace) -> int:
     return 0
 
 
+def _curves_exposure(args: argparse.Namespace) -> int:
+    project = load_project(args.project)
+    exposure_model = project.metrics.exposure_model
+    if exposure_model is None:
+        print("No exposure model is present. Run `holyrail analyze` first.")
+        return 1
+    curve_json = exposure_model.model_dump_json(indent=2)
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(curve_json, encoding="utf-8")
+        print(f"Wrote exposure curve -> {args.output}")
+    else:
+        print(curve_json)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="holyrail")
     parser.add_argument("--config", type=Path, help="Optional TOML configuration file.")
@@ -106,6 +122,13 @@ def build_parser() -> argparse.ArgumentParser:
     report_parser.add_argument("--project", type=Path, default=Path("holyrail-project.json"))
     report_parser.add_argument("--output", type=Path, help="Optional JSON output path.")
     report_parser.set_defaults(func=_report)
+
+    curves_parser = subparsers.add_parser("curves", help="Inspect generated curve models.")
+    curves_subparsers = curves_parser.add_subparsers(dest="curve_command", required=True)
+    exposure_parser = curves_subparsers.add_parser("exposure", help="Export exposure curve.")
+    exposure_parser.add_argument("--project", type=Path, default=Path("holyrail-project.json"))
+    exposure_parser.add_argument("--output", type=Path, help="Optional JSON output path.")
+    exposure_parser.set_defaults(func=_curves_exposure)
 
     return parser
 

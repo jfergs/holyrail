@@ -27,6 +27,10 @@ def migrate_project_data(data: dict[str, Any]) -> dict[str, Any]:
         migrated = _migrate_v2_to_v3(migrated)
         version = 3
 
+    if version == 3:
+        migrated = _migrate_v3_to_v4(migrated)
+        version = 4
+
     migrated["schema_version"] = version
     return migrated
 
@@ -43,4 +47,25 @@ def _migrate_v2_to_v3(data: dict[str, Any]) -> dict[str, Any]:
     metrics = data.setdefault("metrics", {})
     metrics.setdefault("analysis_report", {})
     data["schema_version"] = 3
+    return data
+
+
+def _migrate_v3_to_v4(data: dict[str, Any]) -> dict[str, Any]:
+    metrics = data.setdefault("metrics", {})
+    exposure_curve = metrics.get("exposure_curve") or []
+    metrics.setdefault(
+        "exposure_model",
+        {
+            "kind": "exposure",
+            "algorithm": "legacy-exposure-curve",
+            "strength": 1.0,
+            "smoothing_window": None,
+            "anchors": [
+                {"index": index, "value": value, "locked": False}
+                for index, value in enumerate(exposure_curve)
+            ],
+            "samples": exposure_curve,
+        },
+    )
+    data["schema_version"] = 4
     return data

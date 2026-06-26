@@ -94,3 +94,10 @@ summary luminance and white-balance ranges, capture interval statistics,
 detected exposure jumps, white-balance jumps, aperture-flicker candidates,
 capture discontinuities, and per-frame flags. `holyrail report` exports that
 model as JSON for graphing, UI work, and external inspection.
+
+## Generated Curves
+
+Generated correction curves are stored separately from rendered per-frame
+corrections. The exposure model records algorithm metadata, strength, smoothing
+window, anchors, and generated samples. `holyrail curves exposure` exports this
+model for inspection or future UI editing.

@@ -5,7 +5,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, Field
 
-CURRENT_SCHEMA_VERSION = 3
+CURRENT_SCHEMA_VERSION = 4
 CURRENT_APP_VERSION = "0.1.0"
 
 
@@ -74,9 +74,25 @@ class SequenceAnalysisReport(BaseModel):
     frame_flags: list[FrameAnalysisFlags] = Field(default_factory=list)
 
 
+class CurveAnchor(BaseModel):
+    index: int
+    value: float
+    locked: bool = False
+
+
+class GeneratedCurve(BaseModel):
+    kind: str
+    algorithm: str
+    strength: float = 1.0
+    smoothing_window: int | None = None
+    anchors: list[CurveAnchor] = Field(default_factory=list)
+    samples: list[float] = Field(default_factory=list)
+
+
 class SequenceMetrics(BaseModel):
     frames: list[FrameMetrics] = Field(default_factory=list)
     exposure_curve: list[float] = Field(default_factory=list)
+    exposure_model: GeneratedCurve | None = None
     color_curve: list[tuple[float, float]] = Field(default_factory=list)
     corrections: list[CorrectionFrame] = Field(default_factory=list)
     analysis_report: SequenceAnalysisReport = Field(default_factory=SequenceAnalysisReport)

@@ -16,7 +16,7 @@ def test_project_round_trip(tmp_path: Path) -> None:
     loaded = load_project(path)
 
     assert loaded.source_root == str(tmp_path)
-    assert loaded.schema_version == 3
+    assert loaded.schema_version == 4
     assert loaded.last_saved_with_app_version == "0.1.0"
 
 
@@ -37,10 +37,11 @@ def test_load_project_migrates_schema_v1(tmp_path: Path) -> None:
 
     loaded = load_project(path)
 
-    assert loaded.schema_version == 3
+    assert loaded.schema_version == 4
     assert loaded.created_with_app_version == "0.0.9"
     assert loaded.last_saved_with_app_version == "0.0.9"
     assert loaded.metrics.analysis_report.frame_count == 0
+    assert loaded.metrics.exposure_model is not None
 
 
 def test_discover_frames_stores_relative_paths(tmp_path: Path) -> None:

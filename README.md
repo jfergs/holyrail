@@ -17,6 +17,7 @@ uv sync --extra dev
 uv run holyrail analyze /path/to/frames --project holyrail-project.json
 uv run holyrail inspect --project holyrail-project.json
 uv run holyrail report --project holyrail-project.json --output analysis-report.json
+uv run holyrail curves exposure --project holyrail-project.json --output exposure-curve.json
 uv run holyrail preview --project holyrail-project.json --output previews
 uv run holyrail render --project holyrail-project.json --output rendered --video output.mp4
 ```

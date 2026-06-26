@@ -294,6 +294,22 @@ editable exposure correction model.
 - Exposure correction does not flatten sunset/sunrise fixtures.
 - User-facing project data can explain the generated exposure curve.
 
+**Progress:**
+
+- Added schema v4 generated exposure model.
+- Stored algorithm metadata, strength, smoothing window, anchors, and generated
+  samples separately from rendered corrections.
+- Kept legacy `exposure_curve` samples for compatibility.
+- Added `holyrail curves exposure` JSON export.
+- Added tests for gradual sunset preservation and single-frame flicker
+  correction.
+
+**Current Validation:**
+
+- `uv run pytest` passed with 22 tests.
+- `uv run ruff check .` passed.
+- `uv run black --check .` passed.
+
 ---
 
 ## Sprint 6 - Color And White-Balance Curves
