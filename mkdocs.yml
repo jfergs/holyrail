@@ -1,0 +1,6 @@
+site_name: HolyRail
+theme:
+  name: mkdocs
+nav:
+  - Home: index.md
+  - Architecture: architecture.md

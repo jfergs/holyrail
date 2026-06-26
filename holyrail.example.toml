@@ -1,0 +1,10 @@
+[analysis]
+downsample_width = 1024
+histogram_bins = 256
+highlight_percentile = 99.0
+shadow_percentile = 1.0
+
+[render]
+jpeg_quality = 95
+preview_width = 1280
+output_extension = "jpg"
