@@ -31,6 +31,10 @@ def migrate_project_data(data: dict[str, Any]) -> dict[str, Any]:
         migrated = _migrate_v3_to_v4(migrated)
         version = 4
 
+    if version == 4:
+        migrated = _migrate_v4_to_v5(migrated)
+        version = 5
+
     migrated["schema_version"] = version
     return migrated
 
@@ -68,4 +72,33 @@ def _migrate_v3_to_v4(data: dict[str, Any]) -> dict[str, Any]:
         },
     )
     data["schema_version"] = 4
+    return data
+
+
+def _migrate_v4_to_v5(data: dict[str, Any]) -> dict[str, Any]:
+    metrics = data.setdefault("metrics", {})
+    color_curve = metrics.get("color_curve") or []
+    red_samples = [float(sample[0]) for sample in color_curve]
+    blue_samples = [float(sample[1]) for sample in color_curve]
+    metrics.setdefault(
+        "color_model",
+        {
+            "kind": "color",
+            "algorithm": "legacy-color-curve",
+            "strength": 1.0,
+            "smoothing_window": None,
+            "anchors": [
+                {
+                    "index": index,
+                    "red_shift": red,
+                    "blue_shift": blue,
+                    "locked": False,
+                }
+                for index, (red, blue) in enumerate(zip(red_samples, blue_samples, strict=True))
+            ],
+            "red_samples": red_samples,
+            "blue_samples": blue_samples,
+        },
+    )
+    data["schema_version"] = 5
     return data

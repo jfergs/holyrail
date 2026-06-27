@@ -102,3 +102,7 @@ corrections. The exposure model records algorithm metadata, strength, smoothing
 window, anchors, and generated samples. `holyrail curves exposure` exports this
 model for inspection or future UI editing. `holyrail recompute-curves`
 regenerates curves from stored metrics without re-reading source images.
+
+The color model stores red/green and blue/green shift samples separately from
+per-frame temperature/tint corrections. Gradual color evolution is preserved
+while abrupt white-balance jumps can be smoothed.

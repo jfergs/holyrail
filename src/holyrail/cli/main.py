@@ -96,6 +96,22 @@ def _curves_exposure(args: argparse.Namespace) -> int:
     return 0
 
 
+def _curves_color(args: argparse.Namespace) -> int:
+    project = load_project(args.project)
+    color_model = project.metrics.color_model
+    if color_model is None:
+        print("No color model is present. Run `holyrail analyze` first.")
+        return 1
+    curve_json = color_model.model_dump_json(indent=2)
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(curve_json, encoding="utf-8")
+        print(f"Wrote color curve -> {args.output}")
+    else:
+        print(curve_json)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="holyrail")
     parser.add_argument("--config", type=Path, help="Optional TOML configuration file.")
@@ -141,6 +157,10 @@ def build_parser() -> argparse.ArgumentParser:
     exposure_parser.add_argument("--project", type=Path, default=Path("holyrail-project.json"))
     exposure_parser.add_argument("--output", type=Path, help="Optional JSON output path.")
     exposure_parser.set_defaults(func=_curves_exposure)
+    color_parser = curves_subparsers.add_parser("color", help="Export color curve.")
+    color_parser.add_argument("--project", type=Path, default=Path("holyrail-project.json"))
+    color_parser.add_argument("--output", type=Path, help="Optional JSON output path.")
+    color_parser.set_defaults(func=_curves_color)
 
     return parser
 

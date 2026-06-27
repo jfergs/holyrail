@@ -352,6 +352,23 @@ blue-hour, or astro color shifts.
 - Strongly colored intentional scenes are not forced neutral.
 - Corrections are stored non-destructively and can be recomputed.
 
+**Progress:**
+
+- Added schema v5 generated color model.
+- Stored red/green and blue/green shift samples, anchors, algorithm metadata,
+  strength, and smoothing window separately from corrections.
+- Kept legacy `color_curve` sample pairs for compatibility.
+- Added color curve config: strength, max shift, and optional smoothing window.
+- Added `holyrail curves color` JSON export.
+- Added tests proving gradual golden-hour trends are preserved and abrupt AWB
+  jumps receive tint correction.
+
+**Current Validation:**
+
+- `uv run pytest` passed with 28 tests.
+- `uv run ruff check .` passed.
+- `uv run black --check .` passed.
+
 ---
 
 ## Sprint 7 - Aperture Flicker And Sensor Noise

@@ -5,9 +5,11 @@ import math
 from scipy.signal import savgol_filter
 
 from holyrail.models import (
+    ColorCurveAnchor,
     CorrectionFrame,
     CurveAnchor,
     FrameMetrics,
+    GeneratedColorCurve,
     GeneratedCurve,
     SequenceAnalysisReport,
     SequenceMetrics,
@@ -101,6 +103,68 @@ def _clamp(value: float, minimum: float, maximum: float) -> float:
     return max(minimum, min(maximum, value))
 
 
+def build_color_model(
+    frames: list[FrameMetrics],
+    analysis_report: SequenceAnalysisReport | None = None,
+    *,
+    strength: float = 1.0,
+    max_shift: float = 0.5,
+    smoothing_window: int | None = None,
+) -> GeneratedColorCurve:
+    red_ratios = [frame.white_balance_r_over_g for frame in frames]
+    blue_ratios = [frame.white_balance_b_over_g for frame in frames]
+    window = _validate_smoothing_window(smoothing_window, len(frames))
+    smooth_r = _smooth_color_segmented(red_ratios, frames, analysis_report, window)
+    smooth_b = _smooth_color_segmented(blue_ratios, frames, analysis_report, window)
+    red_samples = [
+        _clamp(float((target - observed) * strength), -max_shift, max_shift)
+        for observed, target in zip(red_ratios, smooth_r, strict=True)
+    ]
+    blue_samples = [
+        _clamp(float((target - observed) * strength), -max_shift, max_shift)
+        for observed, target in zip(blue_ratios, smooth_b, strict=True)
+    ]
+    anchors = [
+        ColorCurveAnchor(
+            index=frame.index,
+            red_shift=red_samples[index],
+            blue_shift=blue_samples[index],
+        )
+        for index, frame in enumerate(frames)
+    ]
+    return GeneratedColorCurve(
+        algorithm="segmented-savgol-white-balance-ratio-v1",
+        strength=strength,
+        smoothing_window=window,
+        anchors=anchors,
+        red_samples=red_samples,
+        blue_samples=blue_samples,
+    )
+
+
+def _smooth_color_segmented(
+    values: list[float],
+    frames: list[FrameMetrics],
+    analysis_report: SequenceAnalysisReport | None,
+    window: int | None,
+) -> list[float]:
+    if analysis_report is None:
+        return _smooth(values, window=window)
+
+    protected_indices = set(analysis_report.discontinuity_frames)
+    if not protected_indices:
+        return _smooth(values, window=window)
+
+    smoothed = values.copy()
+    start = 0
+    for position, frame in enumerate(frames):
+        if position > start and frame.index in protected_indices:
+            smoothed[start:position] = _smooth(values[start:position], window=window)
+            start = position
+    smoothed[start:] = _smooth(values[start:], window=window)
+    return smoothed
+
+
 def build_sequence_metrics(
     frames: list[FrameMetrics],
     analysis_report: SequenceAnalysisReport | None = None,
@@ -108,6 +172,9 @@ def build_sequence_metrics(
     exposure_strength: float = 1.0,
     max_exposure_correction_ev: float = 1.0,
     exposure_smoothing_window: int | None = None,
+    color_strength: float = 1.0,
+    max_color_shift: float = 0.5,
+    color_smoothing_window: int | None = None,
 ) -> SequenceMetrics:
     exposure_model = build_exposure_model(
         frames,
@@ -116,10 +183,13 @@ def build_sequence_metrics(
         max_correction_ev=max_exposure_correction_ev,
         smoothing_window=exposure_smoothing_window,
     )
-    raw_r = [frame.white_balance_r_over_g for frame in frames]
-    raw_b = [frame.white_balance_b_over_g for frame in frames]
-    smooth_r = _smooth(raw_r)
-    smooth_b = _smooth(raw_b)
+    color_model = build_color_model(
+        frames,
+        analysis_report,
+        strength=color_strength,
+        max_shift=max_color_shift,
+        smoothing_window=color_smoothing_window,
+    )
 
     corrections: list[CorrectionFrame] = []
     for index, frame in enumerate(frames):
@@ -127,8 +197,8 @@ def build_sequence_metrics(
             CorrectionFrame(
                 index=frame.index,
                 exposure_ev=exposure_model.samples[index],
-                temperature_shift=float(smooth_b[index] - frame.white_balance_b_over_g),
-                tint_shift=float(smooth_r[index] - frame.white_balance_r_over_g),
+                temperature_shift=color_model.blue_samples[index],
+                tint_shift=color_model.red_samples[index],
             )
         )
 
@@ -136,7 +206,8 @@ def build_sequence_metrics(
         frames=frames,
         exposure_curve=exposure_model.samples,
         exposure_model=exposure_model,
-        color_curve=list(zip(smooth_r, smooth_b, strict=True)),
+        color_curve=list(zip(color_model.red_samples, color_model.blue_samples, strict=True)),
+        color_model=color_model,
         corrections=corrections,
         analysis_report=analysis_report or SequenceAnalysisReport(),
     )

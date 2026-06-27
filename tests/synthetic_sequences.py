@@ -67,3 +67,11 @@ def aperture_flicker_luminance() -> list[float]:
 
 def awb_jump_red_values(count: int) -> list[float]:
     return [1.0 if index < count // 2 else 1.32 for index in range(count)]
+
+
+def golden_hour_red_values(count: int) -> list[float]:
+    return [1.0 + index * 0.025 for index in range(count)]
+
+
+def blue_hour_blue_values(count: int) -> list[float]:
+    return [1.0 + index * 0.025 for index in range(count)]

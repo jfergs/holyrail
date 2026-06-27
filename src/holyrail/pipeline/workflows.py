@@ -26,6 +26,9 @@ def analyze(source: Path, project_path: Path, config: HolyRailConfig) -> Project
             exposure_strength=config.exposure.strength,
             max_exposure_correction_ev=config.exposure.max_correction_ev,
             exposure_smoothing_window=config.exposure.smoothing_window,
+            color_strength=config.color.strength,
+            max_color_shift=config.color.max_shift,
+            color_smoothing_window=config.color.smoothing_window,
         ),
     )
     save_project(project, project_path)
@@ -40,6 +43,9 @@ def recompute_curves(project_path: Path, config: HolyRailConfig) -> ProjectDocum
         exposure_strength=config.exposure.strength,
         max_exposure_correction_ev=config.exposure.max_correction_ev,
         exposure_smoothing_window=config.exposure.smoothing_window,
+        color_strength=config.color.strength,
+        max_color_shift=config.color.max_shift,
+        color_smoothing_window=config.color.smoothing_window,
     )
     save_project(project, project_path)
     return project

@@ -16,6 +16,19 @@ platform focused first on professional RAW timelapse workflows.
 
 HolyRail cards use `HR-XXX`.
 
+## In Progress
+
+- `HR-011` Implement color and white-balance correction curves:
+  - Added schema v5 generated color model.
+  - Stored red/green and blue/green shift samples, anchors, algorithm metadata,
+    strength, and smoothing window separately from corrections.
+  - Kept legacy `color_curve` sample pairs for compatibility.
+  - Added color curve config: strength, max shift, and optional smoothing
+    window.
+  - Added `holyrail curves color` JSON export.
+  - Added tests proving gradual golden-hour trends are preserved and abrupt
+    AWB jumps receive tint correction.
+
 ## P0 - Foundation
 
 - `HR-001` Publish initial repository.

@@ -21,6 +21,7 @@ def test_cli_analyze_and_preview(tmp_path: Path) -> None:
     previews = tmp_path / "previews"
     report = tmp_path / "report.json"
     exposure_curve = tmp_path / "exposure-curve.json"
+    color_curve = tmp_path / "color-curve.json"
 
     assert main(["analyze", str(frames), "--project", str(project)]) == 0
     assert main(["recompute-curves", "--project", str(project)]) == 0
@@ -40,10 +41,24 @@ def test_cli_analyze_and_preview(tmp_path: Path) -> None:
         )
         == 0
     )
+    assert (
+        main(
+            [
+                "curves",
+                "color",
+                "--project",
+                str(project),
+                "--output",
+                str(color_curve),
+            ]
+        )
+        == 0
+    )
 
     assert len(list(previews.glob("*.jpg"))) == 2
     assert report.exists()
     assert exposure_curve.exists()
+    assert color_curve.exists()
 
 
 def test_cli_inspect_reports_project_health(tmp_path: Path) -> None:
